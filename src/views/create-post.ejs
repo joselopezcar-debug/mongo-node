@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Nuevo Post</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body { background-color: #111827; color: #f3f4f6; padding-top: 50px; }
+    .form-container { background-color: #1f2937; padding: 40px; border-radius: 16px; border: 1px solid #374151; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    h5 { color: #06b6d4; font-weight: 600; margin-bottom: 30px; }
+    label { color: #9ca3af !important; }
+    input, textarea, select { color: #ffffff !important; border-bottom: 1px solid #4b5563 !important; }
+    input:focus, textarea:focus { border-bottom: 1px solid #06b6d4 !important; box-shadow: 0 1px 0 0 #06b6d4 !important; }
+    .btn-submit { background-color: #06b6d4 !important; font-weight: 600; border-radius: 6px; width: 100%; margin-top: 20px; }
+    .browser-default { background-color: #111827 !important; border: 1px solid #4b5563 !important; border-radius: 6px; padding: 10px; margin-top: 5px; }
+  </style>
+</head>
+<body class="container" style="margin-top: 50px;">
+  <h4>Crear Publicación</h4>
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m8 offset-m2 form-container">
+        <h5 class="center-align"><i class="material-icons left" style="font-size: 2rem;">add_box</i>NUEVA PUBLICACIÓN</h5>
+        <form action="/posts/create" method="POST">
+          
+          <div class="row">
+            <div class="col s12">
+              <label>Asignar Autor del Post</label>
+              <select name="userId" required class="browser-default">
+                <option value="" disabled selected>Selecciona un perfil de usuario disponible</option>
+                <% users.forEach(user => { %>
+                  <option value="<%= user._id %>"><%= user.name %> <%= user.lastName %> (<%= user.email %>)</option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 15px;">
+            <div class="input-field col s12">
+              <input id="title" name="title" type="text" required minlength="5" maxlength="30">
+              <label for="title">Título del Post (Entre 5 y 30 caracteres)</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="content" name="content" class="materialize-textarea" required minlength="10"></textarea>
+              <label for="content">Escribe el contenido aquí (Mínimo 10 caracteres)</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="hashtags" name="hashtags" type="text" placeholder="dev, javascript, database">
+              <label for="hashtags" class="active">Hashtags temáticos (Sepáralos por comas)</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="imageUrl" name="imageUrl" type="url" placeholder="https://ejemplo.com">
+              <label for="imageUrl" class="active">Vínculo URL de la Imagen de Portada</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s12">
+              <button class="btn waves-effect waves-light btn-submit" type="submit">Guardar y Publicar</button>
+              <a href="/posts" class="btn-flat grey-text center-align" style="display:block; margin-top: 15px; font-weight: 500;">Volver al Tablón</a>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

@@ -9,13 +9,18 @@ class PostRepository {
         return await Post.find().populate("user");
     }
 
+    async findById(id) {
+        return await Post.findById(id).populate("user");
+    }
+
     async findByUser(userId) {
         return await Post.find({ user: userId }).populate("user");
     }
 
     async update(postId, postData) {
-        return await Post.findByIdAndUpdate(postId, postData, { new: true });
-        // { new: true } => devuelve el post actualizado en vez del antiguo
+        // Añadimos la fecha de actualización automática al editar
+        postData.updatedAt = Date.now();
+        return await Post.findByIdAndUpdate(postId, postData, { new: true, runValidators: true });
     }
 
     async delete(postId) {

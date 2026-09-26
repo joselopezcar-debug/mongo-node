@@ -3,58 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Media - Post</title>
-  <!-- Importar Materialize CSS -->
+  <title>Social Media - Posts</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
   <!-- Iconos de Google -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body { background-color: #111827; color: #f3f4f6; }
+    nav { background-color: #1f2937 !important; border-bottom: 2px solid #06b6d4; box-shadow: none !important; }
+    .brand-logo { font-weight: 700; letter-spacing: 1px; color: #06b6d4 !important; }
+    h4 { font-weight: 300; letter-spacing: 0.5px; color: #e5e7eb; margin-bottom: 30px; }
+    .btn-floating-trigger { background-color: #06b6d4 !important; }
+    .card-custom { background-color: #1f2937 !important; border-radius: 12px; overflow: hidden; border: 1px solid #374151; height: 460px !important; display: flex; flex-direction: column; }
+    .card-custom .card-image { max-height: 180px; overflow: hidden; background-color: #111827; }
+    .card-custom .card-image img { height: 180px; object-fit: cover; filter: brightness(0.9); }
+    .card-custom .card-content { flex-grow: 1; padding: 20px; color: #d1d5db; }
+    .card-custom .card-title { color: #06b6d4 !important; font-weight: 600; font-size: 1.4rem; }
+    .card-custom .card-action { background-color: #111827 !important; border-top: 1px solid #374151 !important; padding: 12px 20px !important; display: flex; justify-content: space-between; align-items: center; }
+    .card-custom .card-action span { color: #9ca3af; font-size: 0.9rem; }
+    .custom-chip { background-color: #2b3a4a !important; color: #22d3ee !important; font-weight: 500; font-size: 0.75rem; border-radius: 6px; }
+    .text-content { color: #9ca3af; line-height: 1.6; margin-bottom: 15px; }
+  </style>
 </head>
 <body class="grey lighten-4">
-
-  <!-- Navbar -->
   <nav>
-    <div class="nav-wrapper teal">
-      <a href="#!" class="brand-logo center">Social Media</a>
+    <div class="nav-wrapper container">
+      <a href="/" class="brand-logo center">STUDIO MEDIA</a>
     </div>
   </nav>
 
-  <div class="container">
-    <h4 class="center-align">Bienvenido a Social Media</h4>
-
+  <div class="container" style="margin-top: 40px;">
+    <!-- Fila del Botón de Acción Principal -->
     <div class="row">
-      <!-- Card del Post -->
-      <div class="col s12 m6 l4">
-        <div class="card">
-          <div class="card-image">
-            <img src="https://media.istockphoto.com/id/627795510/photo/example.jpg?s=612x612&w=0&k=20&c=lpUf5rjPVd6Kl_M6heqC8sUncR4FLmtsRzeYdTr5X_I=" alt="Imagen del post">
-          </div>
-          <div class="card-content">
-            <span class="card-title">Título del Post</span>
-            <p>
-              Este es un ejemplo de contenido del post. Aquí puedes escribir la descripción o texto relacionado.
-            </p>
-            <p>
-              <strong>Hashtags:</strong>  
-              <span class="chip">#ejemplo</span>
-              <span class="chip">#social</span>
-              <span class="chip">#media</span>
-              <span class="chip">#práctica</span>
-              <span class="chip">#nodejs</span>
-            </p>
-          </div>
-          <div class="card-action">
-            <div class="right">
-              <a href="#!" class="btn-flat"><i class="material-icons teal-text">edit</i></a>
-              <a href="#!" class="btn-flat"><i class="material-icons red-text">delete</i></a>
+        <div class="col s12 right-align">
+            <a href="/posts/create" class="btn waves-effect waves-light btn-floating-trigger" style="border-radius: 8px; font-weight: 600;">
+              <i class="material-icons left">add_circle</i>Publicar Artículo
+            </a>
+        </div>
+    </div>
+
+    <h4 class="center-align">Explorar Publicaciones</h4>
+    
+    <div class="row">
+      <% if (posts.length === 0) { %>
+        <div class="col s12 center-align" style="margin-top: 40px;">
+          <i class="material-icons grey-text text-darken-1" style="font-size: 4rem;">dynamic_feed</i>
+          <p class="flow-text grey-text text-lighten-1">No hay publicaciones activas en la red en este momento.</p>
+        </div>
+      <% } %>
+
+      <% posts.forEach(post => { %>
+        <div class="col s12 m6 l4">
+          <div class="card card-custom">
+            <div class="card-image">
+              <img src="<%= post.imageUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGKCyvpc6vD64MhnrzU59OOmsA_BrIh2UYZdcQ8B7_1D2-muF83CVKJOA&s=10' %>" alt="Visual del post">
             </div>
-            <span><strong>Autor:</strong> Juan Pérez</span>
+            <div class="card-content">
+              <span class="card-title truncate"><%= post.title %></span>
+              <p class="text-content truncate"><%= post.content %></p>
+              <div style="margin-top: 15px;">
+                <% if(post.hashtags) { %>
+                    <% post.hashtags.forEach(tag => { %>
+                        <span class="chip custom-chip">#<%= tag %></span>
+                    <% }) %>
+                <% } %>
+              </div>
+            </div>
+            <div class="card-action">
+              <span>By: <b><%= post.user ? post.user.name : 'Anónimo' %></b></span>
+              <div class="actions">
+                <a href="/posts/edit/<%= post._id %>" class="btn-flat" style="padding: 0 8px;"><i class="material-icons cyan-text">mode_edit</i></a>
+                <a href="/posts/delete/<%= post._id %>" class="btn-flat" style="padding: 0 8px;" onclick="return confirm('¿Confirmas la eliminación definitiva de esta publicación?')"><i class="material-icons red-text">delete_forever</i></a>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      <% }) %>
     </div>
-  </div>
-
-  <!-- Importar Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
